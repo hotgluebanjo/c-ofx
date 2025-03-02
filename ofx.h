@@ -390,8 +390,8 @@ struct OFX_TimelineSuiteV1 {
 #define OFX_IMAGE_COMPONENT_ALPHA                                 "OfxImageComponentAlpha"
 
 #define OFX_IMAGE_OPAQUE                                          "OfxImageOpaque"
-#define OFX_IMAGE_PRE_MULTIPLIED                                  "OfxImageAlphaPremultiplied"
-#define OFX_IMAGE_UN_PRE_MULTIPLIED                               "OfxImageAlphaUnPremultiplied"
+#define OFX_IMAGE_PREMULTIPLIED                                   "OfxImageAlphaPremultiplied"
+#define OFX_IMAGE_UNPREMULTIPLIED                                 "OfxImageAlphaUnPremultiplied"
 
 #define OFX_IMAGE_FIELD_NONE                                      "OfxFieldNone"
 #define OFX_IMAGE_FIELD_LOWER                                     "OfxFieldLower"
@@ -509,7 +509,7 @@ struct OFX_TimelineSuiteV1 {
 #define OFX_IMAGE_EFFECT_PROP_CONTEXT                             "OfxImageEffectPropContext"
 #define OFX_IMAGE_EFFECT_PROP_PIXEL_DEPTH                         "OfxImageEffectPropPixelDepth"
 #define OFX_IMAGE_EFFECT_PROP_COMPONENTS                          "OfxImageEffectPropComponents"
-#define OFX_IMAGE_EFFECT_PROP_PRE_MULTIPLICATION                  "OfxImageEffectPropPreMultiplication"
+#define OFX_IMAGE_EFFECT_PROP_PREMULTIPLICATION                   "OfxImageEffectPropPreMultiplication"
 #define OFX_IMAGE_EFFECT_PROP_SUPPORTED_PIXEL_DEPTHS              "OfxImageEffectPropSupportedPixelDepths"
 #define OFX_IMAGE_EFFECT_PROP_SUPPORTED_COMPONENTS                "OfxImageEffectPropSupportedComponents"
 #define OFX_IMAGE_EFFECT_PROP_FRAME_RATE                          "OfxImageEffectPropFrameRate"
