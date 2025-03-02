@@ -192,7 +192,7 @@ void set_host(OFX_Host *host) {
 
 OFX_Plugin PLUGIN = {
     .plugin_api           = OFX_IMAGE_EFFECT_PLUGIN_API,
-    .api_version          = 1,
+    .api_version          = OFX_IMAGE_EFFECT_PLUGIN_API_VERSION,
     .plugin_identifier    = "ExampleOFX.InvertC",
     .plugin_version_major = 0,
     .plugin_version_minor = 1,
