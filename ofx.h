@@ -31,14 +31,14 @@ typedef struct OFX_Range_f64 { double min, max; } OFX_Range_f64;
 typedef struct OFX_Rect_i32 { int32_t x1, y1, x2, y2; } OFX_Rect_i32;
 typedef struct OFX_Rect_f64 { double x1, y1, x2, y2; } OFX_Rect_f64;
 
-typedef void *OFX_PropertySetHandle;
-typedef void *OFX_DrawContextHandle;
-typedef void *OFX_ImageEffectHandle;
-typedef void *OFX_ImageClipHandle;
-typedef void *OFX_ImageMemoryHandle;
-typedef void *OFX_InteractHandle;
+typedef void *OFX_EffectHandle;
+typedef void *OFX_PropMapHandle;
+typedef void *OFX_ParamMapHandle;
+typedef void *OFX_ClipHandle;
 typedef void *OFX_ParamHandle;
-typedef void *OFX_ParamSetHandle;
+typedef void *OFX_InteractHandle;
+typedef void *OFX_DrawContextHandle;
+typedef void *OFX_MemoryHandle;
 typedef void *OFX_MutexHandle;
 
 typedef void (*OFX_ThreadFunctionV1)(uint32_t thread_index, uint32_t thread_max, void *custom_arg);
@@ -92,8 +92,8 @@ enum OFX_DrawTextAlignment {
 
 typedef struct OFX_Host OFX_Host;
 struct OFX_Host {
-    OFX_PropertySetHandle host;
-    void *(*fetch_suite)(OFX_PropertySetHandle host, char *suite_name, int32_t suite_version);
+    OFX_PropMapHandle host;
+    void *(*fetch_suite)(OFX_PropMapHandle host, char *suite_name, int32_t suite_version);
 };
 
 typedef struct OFX_Plugin OFX_Plugin;
@@ -105,7 +105,7 @@ struct OFX_Plugin {
     uint32_t plugin_version_minor;
 
     void (*set_host)(OFX_Host *host);
-    OFX_Status (*main_entry)(char *action, OFX_ImageEffectHandle handle, OFX_PropertySetHandle in_args, OFX_PropertySetHandle out_args);
+    OFX_Status (*main_entry)(char *action, OFX_EffectHandle handle, OFX_PropMapHandle in_args, OFX_PropMapHandle out_args);
 };
 
 typedef struct OFX_DialogSuiteV1 OFX_DialogSuiteV1;
@@ -128,54 +128,54 @@ struct OFX_DrawSuiteV1 {
 
 typedef struct OFX_ImageEffectOpenGLRenderSuiteV1 OFX_ImageEffectOpenGLRenderSuiteV1;
 struct OFX_ImageEffectOpenGLRenderSuiteV1 {
-    OFX_Status (*clip_load_texture)(OFX_ImageClipHandle clip, OFX_Time time, char *format, OFX_Rect_f64 *region, OFX_PropertySetHandle *texture_handle);
-    OFX_Status (*clip_free_texture)(OFX_PropertySetHandle texture_handle);
+    OFX_Status (*clip_load_texture)(OFX_ClipHandle clip, OFX_Time time, char *format, OFX_Rect_f64 *region, OFX_PropMapHandle *texture_handle);
+    OFX_Status (*clip_free_texture)(OFX_PropMapHandle texture_handle);
     OFX_Status (*flush_resources)();
 };
 
 typedef struct OFX_ImageEffectSuiteV1 OFX_ImageEffectSuiteV1;
 struct OFX_ImageEffectSuiteV1 {
-    OFX_Status (*get_property_set)(OFX_ImageEffectHandle image_effect, OFX_PropertySetHandle *prop_handle);
-    OFX_Status (*get_param_set)(OFX_ImageEffectHandle image_effect, OFX_ParamSetHandle *param_set);
+    OFX_Status (*get_prop_map)(OFX_EffectHandle image_effect, OFX_PropMapHandle *prop_handle);
+    OFX_Status (*get_param_map)(OFX_EffectHandle image_effect, OFX_ParamMapHandle *param_map);
 
-    OFX_Status (*clip_define)(OFX_ImageEffectHandle image_effect, char *name, OFX_PropertySetHandle *property_set);
-    OFX_Status (*clip_get_handle)(OFX_ImageEffectHandle image_effect, char *name, OFX_ImageClipHandle *clip, OFX_PropertySetHandle *property_set);
-    OFX_Status (*clip_get_property_set)(OFX_ImageClipHandle clip, OFX_PropertySetHandle *prop_handle);
-    OFX_Status (*clip_get_image)(OFX_ImageClipHandle clip, OFX_Time time, OFX_Rect_f64 *region, OFX_PropertySetHandle *image_handle);
-    OFX_Status (*clip_release_image)(OFX_PropertySetHandle image_handle);
-    OFX_Status (*clip_get_region_of_definition)(OFX_ImageClipHandle clip, OFX_Time time, OFX_Rect_f64 *bounds);
+    OFX_Status (*clip_define)(OFX_EffectHandle image_effect, char *name, OFX_PropMapHandle *prop_map);
+    OFX_Status (*clip_get_handle)(OFX_EffectHandle image_effect, char *name, OFX_ClipHandle *clip, OFX_PropMapHandle *prop_map);
+    OFX_Status (*clip_get_prop_map)(OFX_ClipHandle clip, OFX_PropMapHandle *prop_handle);
+    OFX_Status (*clip_get_image)(OFX_ClipHandle clip, OFX_Time time, OFX_Rect_f64 *region, OFX_PropMapHandle *image_handle);
+    OFX_Status (*clip_release_image)(OFX_PropMapHandle image_handle);
+    OFX_Status (*clip_get_region_of_definition)(OFX_ClipHandle clip, OFX_Time time, OFX_Rect_f64 *bounds);
 
-    int32_t (*abort)(OFX_ImageEffectHandle image_effect);
+    int32_t (*abort)(OFX_EffectHandle image_effect);
 
-    OFX_Status (*image_memory_alloc)(OFX_ImageEffectHandle instance_handle, size_t n_bytes, OFX_ImageMemoryHandle *memory_handle);
-    OFX_Status (*image_memory_free)(OFX_ImageMemoryHandle memory_handle);
-    OFX_Status (*image_memory_lock)(OFX_ImageMemoryHandle memory_handle, void **returned_ptr);
-    OFX_Status (*image_memory_unlock)(OFX_ImageMemoryHandle memory_handle);
+    OFX_Status (*image_memory_alloc)(OFX_EffectHandle instance_handle, size_t n_bytes, OFX_MemoryHandle *memory_handle);
+    OFX_Status (*image_memory_free)(OFX_MemoryHandle memory_handle);
+    OFX_Status (*image_memory_lock)(OFX_MemoryHandle memory_handle, void **returned_ptr);
+    OFX_Status (*image_memory_unlock)(OFX_MemoryHandle memory_handle);
 };
 
 typedef struct OFX_InteractSuiteV1 OFX_InteractSuiteV1;
 struct OFX_InteractSuiteV1 {
-    OFX_Status (*interact_swap_buffers)(OFX_InteractHandle interact_instance);
-    OFX_Status (*interact_redraw)(OFX_InteractHandle interact_instance);
-    OFX_Status (*interact_get_propertyset)(OFX_InteractHandle interact_instance, OFX_PropertySetHandle *property);
+    OFX_Status (*swap_buffers)(OFX_InteractHandle interact_instance);
+    OFX_Status (*redraw)(OFX_InteractHandle interact_instance);
+    OFX_Status (*get_prop_set)(OFX_InteractHandle interact_instance, OFX_PropMapHandle *prop);
 };
 
 typedef struct OFX_MemorySuiteV1 OFX_MemorySuiteV1;
 struct OFX_MemorySuiteV1 {
-    OFX_Status (*memory_alloc)(void *handle, size_t n_bytes, void **allocated_data);
-    OFX_Status (*memory_free)(void *allocated_data);
+    OFX_Status (*alloc)(void *handle, size_t n_bytes, void **allocated_data);
+    OFX_Status (*free)(void *allocated_data);
 };
 
 typedef struct OFX_MessageSuiteV1 OFX_MessageSuiteV1;
 struct OFX_MessageSuiteV1 {
-    OFX_Status (*message)(OFX_ImageEffectHandle handle, char *message_type, char *message_id, char *format, ...);
+    OFX_Status (*message)(OFX_EffectHandle handle, char *message_type, char *message_id, char *format, ...);
 };
 
 typedef struct OFX_MessageSuiteV2 OFX_MessageSuiteV2;
 struct OFX_MessageSuiteV2 {
-    OFX_Status (*message)(OFX_ImageEffectHandle handle, char *message_type, char *message_id, char *format, ...);
-    OFX_Status (*set_persistent_message)(OFX_ImageEffectHandle handle, char *message_type, char *message_id, char *format, ...);
-    OFX_Status (*clear_persistent_message)(OFX_ImageEffectHandle handle);
+    OFX_Status (*message)(OFX_EffectHandle handle, char *message_type, char *message_id, char *format, ...);
+    OFX_Status (*set_persistent_message)(OFX_EffectHandle handle, char *message_type, char *message_id, char *format, ...);
+    OFX_Status (*clear_persistent_message)(OFX_EffectHandle handle);
 };
 
 typedef struct OFX_MultithreadSuiteV1 OFX_MultithreadSuiteV1;
@@ -200,90 +200,90 @@ struct OFX_OpenCLProgramSuiteV1 {
 
 typedef struct OFX_ParameterSuiteV1 OFX_ParameterSuiteV1;
 struct OFX_ParameterSuiteV1 {
-    OFX_Status (*param_define)(OFX_ParamSetHandle param_set, char *param_type, char *name, OFX_PropertySetHandle *property_set);
-    OFX_Status (*param_get_handle)(OFX_ParamSetHandle param_set, char *name, OFX_ParamHandle *param, OFX_PropertySetHandle *property_set);
+    OFX_Status (*define)(OFX_ParamMapHandle param_map, char *param_type, char *name, OFX_PropMapHandle *prop_map);
+    OFX_Status (*get_handle)(OFX_ParamMapHandle param_map, char *name, OFX_ParamHandle *param, OFX_PropMapHandle *prop_map);
     
-    OFX_Status (*param_set_get_property_set)(OFX_ParamSetHandle param_set, OFX_PropertySetHandle *prop_handle);
-    OFX_Status (*param_get_property_set)(OFX_ParamHandle param, OFX_PropertySetHandle *prop_handle);
+    OFX_Status (*map_get_prop_map)(OFX_ParamMapHandle param_map, OFX_PropMapHandle *prop_handle);
+    OFX_Status (*get_prop_map)(OFX_ParamHandle param, OFX_PropMapHandle *prop_handle);
 
-    OFX_Status (*param_get_value)(OFX_ParamHandle param_handle, ...);
-    OFX_Status (*param_get_value_at_time)(OFX_ParamHandle param_handle, OFX_Time time, ...);
-    OFX_Status (*param_get_derivative)(OFX_ParamHandle param_handle, OFX_Time time, ...);
-    OFX_Status (*param_get_integral)(OFX_ParamHandle param_handle, OFX_Time time1, OFX_Time time2, ...);
+    OFX_Status (*get_value)(OFX_ParamHandle param_handle, ...);
+    OFX_Status (*get_value_at_time)(OFX_ParamHandle param_handle, OFX_Time time, ...);
+    OFX_Status (*get_derivative)(OFX_ParamHandle param_handle, OFX_Time time, ...);
+    OFX_Status (*get_integral)(OFX_ParamHandle param_handle, OFX_Time time1, OFX_Time time2, ...);
 
-    OFX_Status (*param_set_value)(OFX_ParamHandle param_handle, ...);
-    OFX_Status (*param_set_value_at_time)(OFX_ParamHandle param_handle, OFX_Time time, ...);
+    OFX_Status (*set_value)(OFX_ParamHandle param_handle, ...);
+    OFX_Status (*set_value_at_time)(OFX_ParamHandle param_handle, OFX_Time time, ...);
 
-    OFX_Status (*param_get_num_keys)(OFX_ParamHandle param_handle, uint32_t *number_of_keys);
-    OFX_Status (*param_get_key_time)(OFX_ParamHandle param_handle, uint32_t nth_key, OFX_Time *time);
-    OFX_Status (*param_get_key_index)(OFX_ParamHandle param_handle, OFX_Time time, int32_t direction, int32_t *index);
+    OFX_Status (*get_num_keys)(OFX_ParamHandle param_handle, uint32_t *number_of_keys);
+    OFX_Status (*get_key_time)(OFX_ParamHandle param_handle, uint32_t nth_key, OFX_Time *time);
+    OFX_Status (*get_key_index)(OFX_ParamHandle param_handle, OFX_Time time, int32_t direction, int32_t *index);
 
-    OFX_Status (*param_delete_key)(OFX_ParamHandle param_handle, OFX_Time time);
-    OFX_Status (*param_delete_all_keys)(OFX_ParamHandle param_handle);
+    OFX_Status (*delete_key)(OFX_ParamHandle param_handle, OFX_Time time);
+    OFX_Status (*delete_all_keys)(OFX_ParamHandle param_handle);
 
-    OFX_Status (*param_copy)(OFX_ParamHandle param_to, OFX_ParamHandle param_from, OFX_Time dst_offset, OFX_Range_f64 *frame_range);
+    OFX_Status (*copy)(OFX_ParamHandle param_to, OFX_ParamHandle param_from, OFX_Time dst_offset, OFX_Range_f64 *frame_range);
 
-    OFX_Status (*param_edit_begin)(OFX_ParamSetHandle param_set, char *name);
-    OFX_Status (*param_edit_end)(OFX_ParamSetHandle param_set);
+    OFX_Status (*edit_begin)(OFX_ParamMapHandle param_map, char *name);
+    OFX_Status (*edit_end)(OFX_ParamMapHandle param_map);
 };
 
 typedef struct OFX_ParametricParameterSuiteV1 OFX_ParametricParameterSuiteV1;
 struct OFX_ParametricParameterSuiteV1 {
-    OFX_Status (*parametric_param_get_value)(OFX_ParamHandle param, int32_t curve_index, OFX_Time time, double parametric_position, double *return_value);
-    OFX_Status (*parametric_param_get_n_control_points)(OFX_ParamHandle param, int32_t curve_index, OFX_Time time, int32_t *return_value);
-    OFX_Status (*parametric_param_get_nth_control_point)(OFX_ParamHandle param, int32_t curve_index, OFX_Time time, int32_t nth_ctrl, double *key, double *value);
-    OFX_Status (*parametric_param_set_nth_control_point)(OFX_ParamHandle param, int32_t curve_index, OFX_Time time, int32_t nth_ctrl, double key, double value, bool add_animation_key);
-    OFX_Status (*parametric_param_add_control_point)(OFX_ParamHandle param, int32_t curve_index, OFX_Time time, double key, double value, bool add_animation_key);
+    OFX_Status (*get_value)(OFX_ParamHandle param, int32_t curve_index, OFX_Time time, double parametric_position, double *return_value);
+    OFX_Status (*get_n_control_points)(OFX_ParamHandle param, int32_t curve_index, OFX_Time time, int32_t *return_value);
+    OFX_Status (*get_nth_control_point)(OFX_ParamHandle param, int32_t curve_index, OFX_Time time, int32_t nth_ctrl, double *key, double *value);
+    OFX_Status (*set_nth_control_point)(OFX_ParamHandle param, int32_t curve_index, OFX_Time time, int32_t nth_ctrl, double key, double value, bool add_animation_key);
+    OFX_Status (*add_control_point)(OFX_ParamHandle param, int32_t curve_index, OFX_Time time, double key, double value, bool add_animation_key);
 
-    OFX_Status (*parametric_param_delete_control_point)(OFX_ParamHandle param, int32_t curve_index, int32_t nth_ctrl);
-    OFX_Status (*parametric_param_delete_all_control_points)(OFX_ParamHandle param, int32_t curve_index);
+    OFX_Status (*delete_control_point)(OFX_ParamHandle param, int32_t curve_index, int32_t nth_ctrl);
+    OFX_Status (*delete_all_control_points)(OFX_ParamHandle param, int32_t curve_index);
 };
 
 typedef struct OFX_ProgressSuiteV1 OFX_ProgressSuiteV1;
 struct OFX_ProgressSuiteV1 {
-    OFX_Status (*progress_start)(OFX_ImageEffectHandle instance, char *label);
-    OFX_Status (*progress_update)(OFX_ImageEffectHandle instance, double progress);
-    OFX_Status (*progress_end)(OFX_ImageEffectHandle instance);
+    OFX_Status (*start)(OFX_EffectHandle instance, char *label);
+    OFX_Status (*update)(OFX_EffectHandle instance, double progress);
+    OFX_Status (*end)(OFX_EffectHandle instance);
 };
 
 typedef struct OFX_ProgressSuiteV2 OFX_ProgressSuiteV2;
 struct OFX_ProgressSuiteV2 {
-    OFX_Status (*progress_start)(OFX_ImageEffectHandle instance, char *message, char *messageid);
-    OFX_Status (*progress_update)(OFX_ImageEffectHandle instance, double progress);
-    OFX_Status (*progress_end)(OFX_ImageEffectHandle instance);
+    OFX_Status (*start)(OFX_EffectHandle instance, char *message, char *messageid);
+    OFX_Status (*update)(OFX_EffectHandle instance, double progress);
+    OFX_Status (*end)(OFX_EffectHandle instance);
 };
 
 typedef struct OFX_PropertySuiteV1 OFX_PropertySuiteV1;
 struct OFX_PropertySuiteV1 {
-    OFX_Status (*prop_set_pointer)(OFX_PropertySetHandle properties, char *property, int32_t index, void *value);
-    OFX_Status (*prop_set_string) (OFX_PropertySetHandle properties, char *property, int32_t index, char *value);
-    OFX_Status (*prop_set_double) (OFX_PropertySetHandle properties, char *property, int32_t index, double value);
-    OFX_Status (*prop_set_int)    (OFX_PropertySetHandle properties, char *property, int32_t index, int32_t value);
+    OFX_Status (*set_pointer)(OFX_PropMapHandle props, char *prop, int32_t index, void *value);
+    OFX_Status (*set_string) (OFX_PropMapHandle props, char *prop, int32_t index, char *value);
+    OFX_Status (*set_double) (OFX_PropMapHandle props, char *prop, int32_t index, double value);
+    OFX_Status (*set_int)    (OFX_PropMapHandle props, char *prop, int32_t index, int32_t value);
 
-    OFX_Status (*prop_set_pointer_n)(OFX_PropertySetHandle properties, char *property, int32_t count, void **value);
-    OFX_Status (*prop_set_string_n) (OFX_PropertySetHandle properties, char *property, int32_t count, char **value);
-    OFX_Status (*prop_set_double_n) (OFX_PropertySetHandle properties, char *property, int32_t count, double *value);
-    OFX_Status (*prop_set_int_n)    (OFX_PropertySetHandle properties, char *property, int32_t count, int32_t *value);
+    OFX_Status (*set_pointer_n)(OFX_PropMapHandle props, char *prop, int32_t count, void **value);
+    OFX_Status (*set_string_n) (OFX_PropMapHandle props, char *prop, int32_t count, char **value);
+    OFX_Status (*set_double_n) (OFX_PropMapHandle props, char *prop, int32_t count, double *value);
+    OFX_Status (*set_int_n)    (OFX_PropMapHandle props, char *prop, int32_t count, int32_t *value);
 
-    OFX_Status (*prop_get_pointer)(OFX_PropertySetHandle properties, char *property, int32_t index, void **value);
-    OFX_Status (*prop_get_string) (OFX_PropertySetHandle properties, char *property, int32_t index, char **value);
-    OFX_Status (*prop_get_double) (OFX_PropertySetHandle properties, char *property, int32_t index, double *value);
-    OFX_Status (*prop_get_int)    (OFX_PropertySetHandle properties, char *property, int32_t index, int32_t *value);
+    OFX_Status (*get_pointer)(OFX_PropMapHandle props, char *prop, int32_t index, void **value);
+    OFX_Status (*get_string) (OFX_PropMapHandle props, char *prop, int32_t index, char **value);
+    OFX_Status (*get_double) (OFX_PropMapHandle props, char *prop, int32_t index, double *value);
+    OFX_Status (*get_int)    (OFX_PropMapHandle props, char *prop, int32_t index, int32_t *value);
 
-    OFX_Status (*prop_get_pointer_n)(OFX_PropertySetHandle properties, char *property, int32_t count, void **value);
-    OFX_Status (*prop_get_string_n) (OFX_PropertySetHandle properties, char *property, int32_t count, char **value);
-    OFX_Status (*prop_get_double_n) (OFX_PropertySetHandle properties, char *property, int32_t count, double *value);
-    OFX_Status (*prop_get_int_n)    (OFX_PropertySetHandle properties, char *property, int32_t count, int32_t *value);
+    OFX_Status (*get_pointer_n)(OFX_PropMapHandle props, char *prop, int32_t count, void **value);
+    OFX_Status (*get_string_n) (OFX_PropMapHandle props, char *prop, int32_t count, char **value);
+    OFX_Status (*get_double_n) (OFX_PropMapHandle props, char *prop, int32_t count, double *value);
+    OFX_Status (*get_int_n)    (OFX_PropMapHandle props, char *prop, int32_t count, int32_t *value);
 
-    OFX_Status (*prop_reset)(OFX_PropertySetHandle properties, char *property);
-    OFX_Status (*prop_get_dimension)(OFX_PropertySetHandle properties, char *property, int32_t *count);
+    OFX_Status (*reset)(OFX_PropMapHandle props, char *prop);
+    OFX_Status (*get_dimension)(OFX_PropMapHandle props, char *prop, int32_t *count);
 };
 
 typedef struct OFX_TimelineSuiteV1 OFX_TimelineSuiteV1;
 struct OFX_TimelineSuiteV1 {
-    OFX_Status (*get_time)(OFX_ImageEffectHandle instance, OFX_Time *time);
-    OFX_Status (*go_to_time)(OFX_ImageEffectHandle instance, OFX_Time time);
-    OFX_Status (*get_time_bounds)(OFX_ImageEffectHandle instance, OFX_Time *first_time, OFX_Time *last_time);
+    OFX_Status (*get_time)(OFX_EffectHandle instance, OFX_Time *time);
+    OFX_Status (*go_to_time)(OFX_EffectHandle instance, OFX_Time time);
+    OFX_Status (*get_time_bounds)(OFX_EffectHandle instance, OFX_Time *first_time, OFX_Time *last_time);
 };
 
 #if defined(__cplusplus)
