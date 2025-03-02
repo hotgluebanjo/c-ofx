@@ -229,12 +229,10 @@ struct OFX_ParameterSuiteV1 {
 
 typedef struct OFX_ParametricParameterSuiteV1 OFX_ParametricParameterSuiteV1;
 struct OFX_ParametricParameterSuiteV1 {
-    OFX_Status (*parametric_param_get_value)           (OFX_ParamHandle param, int32_t curve_index, OFX_Time time, double parametric_position, double *return_value);
+    OFX_Status (*parametric_param_get_value)(OFX_ParamHandle param, int32_t curve_index, OFX_Time time, double parametric_position, double *return_value);
     OFX_Status (*parametric_param_get_n_control_points)(OFX_ParamHandle param, int32_t curve_index, OFX_Time time, int32_t *return_value);
     OFX_Status (*parametric_param_get_nth_control_point)(OFX_ParamHandle param, int32_t curve_index, OFX_Time time, int32_t nth_ctrl, double *key, double *value);
-
     OFX_Status (*parametric_param_set_nth_control_point)(OFX_ParamHandle param, int32_t curve_index, OFX_Time time, int32_t nth_ctrl, double key, double value, bool add_animation_key);
-
     OFX_Status (*parametric_param_add_control_point)(OFX_ParamHandle param, int32_t curve_index, OFX_Time time, double key, double value, bool add_animation_key);
 
     OFX_Status (*parametric_param_delete_control_point)(OFX_ParamHandle param, int32_t curve_index, int32_t nth_ctrl);
