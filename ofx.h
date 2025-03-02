@@ -178,13 +178,13 @@ struct OFX_MessageSuiteV2 {
     OFX_Status (*clear_persistent_message)(OFX_ImageEffectHandle handle);
 };
 
-typedef struct OFX_MultiThreadSuiteV1 OFX_MultiThreadSuiteV1;
-struct OFX_MultiThreadSuiteV1 {
-    OFX_Status (*multi_thread)(OFX_ThreadFunctionV1 func, uint32_t n_threads, void *custom_arg);
-    OFX_Status (*multi_thread_num_cpus)(uint32_t *n_cpus);
+typedef struct OFX_MultithreadSuiteV1 OFX_MultithreadSuiteV1;
+struct OFX_MultithreadSuiteV1 {
+    OFX_Status (*multithread)(OFX_ThreadFunctionV1 func, uint32_t n_threads, void *custom_arg);
+    OFX_Status (*multithread_num_cpus)(uint32_t *n_cpus);
 
-    OFX_Status (*multi_thread_index)(uint32_t *thread_index);
-    int32_t (*multi_thread_is_spawned_thread)();
+    OFX_Status (*multithread_index)(uint32_t *thread_index);
+    int32_t (*multithread_is_spawned_thread)();
 
     OFX_Status (*mutex_create)(OFX_MutexHandle mutex, int32_t lock_count);
     OFX_Status (*mutex_destroy)(OFX_MutexHandle mutex);
@@ -329,7 +329,7 @@ struct OFX_TimelineSuiteV1 {
 #define OFX_INTERACT_SUITE                                        "OfxInteractSuite"
 #define OFX_MEMORY_SUITE                                          "OfxMemorySuite"
 #define OFX_MESSAGE_SUITE                                         "OfxMessageSuite"
-#define OFX_MULTI_THREAD_SUITE                                    "OfxMultiThreadSuite"
+#define OFX_MULTITHREAD_SUITE                                     "OfxMultiThreadSuite"
 #define OFX_PROGRESS_SUITE                                        "OfxProgressSuite"
 #define OFX_PROPERTY_SUITE                                        "OfxPropertySuite"
 #define OFX_TIMELINE_SUITE                                        "OfxTimeLineSuite"
