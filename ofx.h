@@ -4,6 +4,10 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#if defined(__cplusplus)
+extern "C" {
+#endif
+
 typedef int32_t OFX_Status;
 
 typedef double OFX_Time;
@@ -37,11 +41,7 @@ typedef void *OFX_ParamHandle;
 typedef void *OFX_ParamSetHandle;
 typedef void *OFX_MutexHandle;
 
-typedef void (*OFX_ThreadFunctionV1)(
-    uint32_t thread_index,
-    uint32_t thread_max,
-    void *custom_arg
-);
+typedef void (*OFX_ThreadFunctionV1)(uint32_t thread_index, uint32_t thread_max, void *custom_arg);
 
 typedef struct OFX_Bytes OFX_Bytes;
 struct OFX_Bytes {
@@ -691,3 +691,7 @@ struct OFX_TimelineSuiteV1 {
 #define OFX_PARAM_STRING_IS_DIRECTORY_PATH                        "OfxParamStringIsDirectoryPath"
 #define OFX_PARAM_STRING_IS_LABEL                                 "OfxParamStringIsLabel"
 #define OFX_PARAM_STRING_IS_RICH_TEXT_FORMAT                      "OfxParamStringIsRichTextFormat"
+
+#if defined(__cplusplus)
+}
+#endif
