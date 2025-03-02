@@ -1,8 +1,9 @@
 import subprocess
 
 subprocess.run([
-    "cl",
+    "cl", "-nologo",
+    "-Z7",
     "invert.c",
     "-I", "../../",
-    "/link", "/out:Invert.ofx", "/dll",
+    "-link", "-out:InvertC.ofx", "-dll", "-incremental:no", "-debug",
 ])

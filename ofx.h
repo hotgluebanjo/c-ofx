@@ -281,10 +281,10 @@ struct OFX_PropertySuiteV1 {
     OFX_Status (*prop_get_dimension)(OFX_PropertySetHandle properties, char *property, int32_t *count);
 };
 
-typedef struct OFX_TimeLineSuiteV1 OFX_TimeLineSuiteV1;
-struct OFX_TimeLineSuiteV1 {
+typedef struct OFX_TimelineSuiteV1 OFX_TimelineSuiteV1;
+struct OFX_TimelineSuiteV1 {
     OFX_Status (*get_time)(OFX_ImageEffectHandle instance, OFX_Time *time);
-    OFX_Status (*goto_time)(OFX_ImageEffectHandle instance, OFX_Time time);
+    OFX_Status (*go_to_time)(OFX_ImageEffectHandle instance, OFX_Time time);
     OFX_Status (*get_time_bounds)(OFX_ImageEffectHandle instance, OFX_Time *first_time, OFX_Time *last_time);
 };
 
@@ -332,7 +332,7 @@ struct OFX_TimeLineSuiteV1 {
 #define OFX_MULTI_THREAD_SUITE                                    "OfxMultiThreadSuite"
 #define OFX_PROGRESS_SUITE                                        "OfxProgressSuite"
 #define OFX_PROPERTY_SUITE                                        "OfxPropertySuite"
-#define OFX_TIME_LINE_SUITE                                       "OfxTimeLineSuite"
+#define OFX_TIMELINE_SUITE                                        "OfxTimeLineSuite"
 #define OFX_PARAMETER_SUITE                                       "OfxParameterSuite"
 #define OFX_PARAMETRIC_PARAMETER_SUITE                            "OfxParametricParameterSuite"
 #define OFX_OPENGL_RENDER_SUITE                                   "OfxImageEffectOpenGLRenderSuite"

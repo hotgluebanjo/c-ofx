@@ -1,7 +1,7 @@
 #include "ofx.h"
 
-#define PLUGIN_GROUP       "Example OFX Plugins"
-#define PLUGIN_NAME        "Invert C"
+#define PLUGIN_GROUP       "C Example OFX Plugins"
+#define PLUGIN_NAME        "InvertC"
 #define PLUGIN_VERSION     "0.1.0"
 #define PLUGIN_DESCRIPTION "Inverts via 100% - pixel."
 
@@ -12,14 +12,7 @@ struct {
 } ctx;
 
 bool cstr_eq(char *a, char *b) {
-    size_t i = 0;
-    while (!(a[i] == 0 || b[i] == 0)) {
-        if (a[i] != b[i]) {
-            return false;
-        }
-        i += 1;
-    }
-    return true;
+    return strcmp(a, b) == 0;
 }
 
 typedef struct Image Image;
@@ -59,7 +52,7 @@ OFX_Rgba_f32 *get_pixel_ptr(Image img, uint32_t x, uint32_t y) {
     uint32_t x_offset = x - img.bounds.x1;
 
     uint8_t *bytes = (uint8_t *)img.ptr;
-    uint8_t  start = y_offset * img.row_bytes + x_offset * sizeof(OFX_Rgba_f32);
+    size_t start = y_offset * img.row_bytes + x_offset * sizeof(OFX_Rgba_f32);
 
     return (OFX_Rgba_f32 *)&bytes[start];
 }
@@ -200,7 +193,7 @@ void set_host(OFX_Host *host) {
 OFX_Plugin PLUGIN = {
     .plugin_api           = OFX_IMAGE_EFFECT_PLUGIN_API,
     .api_version          = 1,
-    .plugin_identifier    = "C_OFX.Invert",
+    .plugin_identifier    = "ExampleOFX.InvertC",
     .plugin_version_major = 0,
     .plugin_version_minor = 1,
     .set_host             = set_host,

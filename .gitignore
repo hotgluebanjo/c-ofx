@@ -4,3 +4,6 @@
 *.dll
 *.lib
 *.ofx
+*.rdi
+*.pdb
+/include/
