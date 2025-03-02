@@ -1,7 +1,7 @@
 #include "ofx.h"
 
 #define PLUGIN_GROUP       "C Example OFX Plugins"
-#define PLUGIN_NAME        "InvertC"
+#define PLUGIN_NAME        "Invert"
 #define PLUGIN_VERSION     "0.1.0"
 #define PLUGIN_DESCRIPTION "Inverts via 100% - pixel."
 
@@ -76,16 +76,13 @@ OFX_Status describe(OFX_ImageEffectHandle descriptor) {
     OFX_PropertySetHandle properties;
     ctx.effect->get_property_set(descriptor, &properties);
 
-    // Labels
     ctx.prop->prop_set_string(properties, OFX_PROP_LABEL, 0, PLUGIN_NAME);
     ctx.prop->prop_set_string(properties, OFX_IMAGE_EFFECT_PLUGIN_PROP_GROUPING, 0, PLUGIN_GROUP);
     ctx.prop->prop_set_string(properties, OFX_PROP_PLUGIN_DESCRIPTION, 0, PLUGIN_DESCRIPTION);
     ctx.prop->prop_set_string(properties, OFX_PROP_VERSION_LABEL, 0, PLUGIN_VERSION);
 
-    // Context
     ctx.prop->prop_set_string(properties, OFX_IMAGE_EFFECT_PROP_SUPPORTED_CONTEXTS, 0, OFX_IMAGE_EFFECT_CONTEXT_FILTER);
 
-    // Bit depths
     ctx.prop->prop_set_int(properties, OFX_IMAGE_EFFECT_PROP_SUPPORTS_MULTIPLE_CLIP_DEPTHS, 0, 0);
     ctx.prop->prop_set_string(properties, OFX_IMAGE_EFFECT_PROP_SUPPORTED_PIXEL_DEPTHS, 0, OFX_BIT_DEPTH_FLOAT);
 
