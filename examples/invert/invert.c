@@ -18,27 +18,27 @@ bool cstr_eq(char *a, char *b) {
 typedef struct Image Image;
 struct Image {
     OFX_Rect_i32 bounds;
-    OFX_PropertySetHandle properties;
+    OFX_PropMapHandle props;
     void *ptr;
     int32_t row_bytes;
 };
 
-OFX_Status get_image(OFX_ImageEffectHandle instance, OFX_ImageClipHandle clip, OFX_Time time, Image *img) {
-    OFX_Status stat = ctx.effect->clip_get_image(clip, time, NULL, &img->properties);
+OFX_Status get_image(OFX_EffectHandle instance, OFX_ClipHandle clip, OFX_Time time, Image *img) {
+    OFX_Status stat = ctx.effect->clip_get_image(clip, time, NULL, &img->props);
     if (stat != OFX_OK) {
         return stat;
     }
 
-    ctx.prop->prop_get_int_n(img->properties, OFX_IMAGE_PROP_BOUNDS, 4, &img->bounds.x1);
-    ctx.prop->prop_get_pointer(img->properties, OFX_IMAGE_PROP_DATA, 0, &img->ptr);
-    ctx.prop->prop_get_int(img->properties, OFX_IMAGE_PROP_ROW_BYTES, 0, &img->row_bytes);
+    ctx.prop->get_int_n(img->props, OFX_IMAGE_PROP_BOUNDS, 4, &img->bounds.x1);
+    ctx.prop->get_pointer(img->props, OFX_IMAGE_PROP_DATA, 0, &img->ptr);
+    ctx.prop->get_int(img->props, OFX_IMAGE_PROP_ROW_BYTES, 0, &img->row_bytes);
 
     return OFX_OK;
 }
 
 void release_image(Image img) {
-    if (img.properties != NULL) {
-        ctx.effect->clip_release_image(img.properties);
+    if (img.props != NULL) {
+        ctx.effect->clip_release_image(img.props);
     }
 }
 
@@ -72,43 +72,43 @@ OFX_Status load() {
     return OFX_OK;
 }
 
-OFX_Status describe(OFX_ImageEffectHandle descriptor) {
-    OFX_PropertySetHandle properties;
-    ctx.effect->get_property_set(descriptor, &properties);
+OFX_Status describe(OFX_EffectHandle descriptor) {
+    OFX_PropMapHandle props;
+    ctx.effect->get_prop_map(descriptor, &props);
 
-    ctx.prop->prop_set_string(properties, OFX_PROP_LABEL, 0, PLUGIN_NAME);
-    ctx.prop->prop_set_string(properties, OFX_IMAGE_EFFECT_PLUGIN_PROP_GROUPING, 0, PLUGIN_GROUP);
-    ctx.prop->prop_set_string(properties, OFX_PROP_PLUGIN_DESCRIPTION, 0, PLUGIN_DESCRIPTION);
-    ctx.prop->prop_set_string(properties, OFX_PROP_VERSION_LABEL, 0, PLUGIN_VERSION);
+    ctx.prop->set_string(props, OFX_PROP_LABEL, 0, PLUGIN_NAME);
+    ctx.prop->set_string(props, OFX_IMAGE_EFFECT_PLUGIN_PROP_GROUPING, 0, PLUGIN_GROUP);
+    ctx.prop->set_string(props, OFX_PROP_PLUGIN_DESCRIPTION, 0, PLUGIN_DESCRIPTION);
+    ctx.prop->set_string(props, OFX_PROP_VERSION_LABEL, 0, PLUGIN_VERSION);
 
-    ctx.prop->prop_set_string(properties, OFX_IMAGE_EFFECT_PROP_SUPPORTED_CONTEXTS, 0, OFX_IMAGE_EFFECT_CONTEXT_FILTER);
+    ctx.prop->set_string(props, OFX_IMAGE_EFFECT_PROP_SUPPORTED_CONTEXTS, 0, OFX_IMAGE_EFFECT_CONTEXT_FILTER);
 
-    ctx.prop->prop_set_int(properties, OFX_IMAGE_EFFECT_PROP_SUPPORTS_MULTIPLE_CLIP_DEPTHS, 0, 0);
-    ctx.prop->prop_set_string(properties, OFX_IMAGE_EFFECT_PROP_SUPPORTED_PIXEL_DEPTHS, 0, OFX_BIT_DEPTH_FLOAT);
-
-    return OFX_OK;
-}
-
-OFX_Status describe_in_context(OFX_ImageEffectHandle descriptor) {
-    OFX_PropertySetHandle properties;
-
-    ctx.effect->clip_define(descriptor, OFX_IMAGE_EFFECT_SIMPLE_SOURCE_CLIP_NAME, &properties);
-    ctx.prop->prop_set_string(properties, OFX_IMAGE_EFFECT_PROP_SUPPORTED_COMPONENTS, 0, OFX_IMAGE_COMPONENT_RGBA);
-
-    ctx.effect->clip_define(descriptor, OFX_IMAGE_EFFECT_OUTPUT_CLIP_NAME, &properties);
-    ctx.prop->prop_set_string(properties, OFX_IMAGE_EFFECT_PROP_SUPPORTED_COMPONENTS, 0, OFX_IMAGE_COMPONENT_RGBA);
+    ctx.prop->set_int(props, OFX_IMAGE_EFFECT_PROP_SUPPORTS_MULTIPLE_CLIP_DEPTHS, 0, 0);
+    ctx.prop->set_string(props, OFX_IMAGE_EFFECT_PROP_SUPPORTED_PIXEL_DEPTHS, 0, OFX_BIT_DEPTH_FLOAT);
 
     return OFX_OK;
 }
 
-OFX_Status render(OFX_ImageEffectHandle instance, OFX_PropertySetHandle in_args) {
+OFX_Status describe_in_context(OFX_EffectHandle descriptor) {
+    OFX_PropMapHandle props;
+
+    ctx.effect->clip_define(descriptor, OFX_IMAGE_EFFECT_SIMPLE_SOURCE_CLIP_NAME, &props);
+    ctx.prop->set_string(props, OFX_IMAGE_EFFECT_PROP_SUPPORTED_COMPONENTS, 0, OFX_IMAGE_COMPONENT_RGBA);
+
+    ctx.effect->clip_define(descriptor, OFX_IMAGE_EFFECT_OUTPUT_CLIP_NAME, &props);
+    ctx.prop->set_string(props, OFX_IMAGE_EFFECT_PROP_SUPPORTED_COMPONENTS, 0, OFX_IMAGE_COMPONENT_RGBA);
+
+    return OFX_OK;
+}
+
+OFX_Status render(OFX_EffectHandle instance, OFX_PropMapHandle in_args) {
     OFX_Time time;
-    ctx.prop->prop_get_double(in_args, OFX_PROP_TIME, 0, &time);
+    ctx.prop->get_double(in_args, OFX_PROP_TIME, 0, &time);
 
     OFX_Rect_i32 render_bounds;
-    ctx.prop->prop_get_int_n(in_args, OFX_IMAGE_EFFECT_PROP_RENDER_WINDOW, 4, &render_bounds.x1);
+    ctx.prop->get_int_n(in_args, OFX_IMAGE_EFFECT_PROP_RENDER_WINDOW, 4, &render_bounds.x1);
 
-    OFX_ImageClipHandle src_clip, dst_clip;
+    OFX_ClipHandle src_clip, dst_clip;
     ctx.effect->clip_get_handle(instance, OFX_IMAGE_EFFECT_SIMPLE_SOURCE_CLIP_NAME, &src_clip, NULL);
     ctx.effect->clip_get_handle(instance, OFX_IMAGE_EFFECT_OUTPUT_CLIP_NAME, &dst_clip, NULL);
 
@@ -153,9 +153,9 @@ OFX_Status render(OFX_ImageEffectHandle instance, OFX_PropertySetHandle in_args)
 
 OFX_Status plugin_main(
     char *action,
-    OFX_ImageEffectHandle handle,
-    OFX_PropertySetHandle in_args,
-    OFX_PropertySetHandle out_args
+    OFX_EffectHandle handle,
+    OFX_PropMapHandle in_args,
+    OFX_PropMapHandle out_args
 ) {
     if (cstr_eq(action, OFX_ACTION_LOAD)) {
         return load();
