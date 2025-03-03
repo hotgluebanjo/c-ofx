@@ -690,6 +690,16 @@ struct OFX_TimelineSuiteV1 {
 #define OFX_PARAM_STRING_IS_LABEL                                 "OfxParamStringIsLabel"
 #define OFX_PARAM_STRING_IS_RICH_TEXT_FORMAT                      "OfxParamStringIsRichTextFormat"
 
+// Resolve Extensions
+// ------------------
+
+#define OFX_IMAGE_CLIP_PROP_THUMBNAIL                             "kOfxImageClipPropThumbnail"
+
+#define OFX_IMAGE_EFFECT_PROP_RESOLVE_PAGE                        "OfxImageEffectPropResolvePage"
+#define OFX_IMAGE_EFFECT_PROP_NO_SPATIAL_AWARENESS                "OfxImageEffectPropNoSpatialAwareness"
+#define OFX_IMAGE_EFFECT_PROP_SRC_FILE_PATH                       "OfxImageEffectPropSrcFilePath"
+#define OFX_IMAGE_EFFECT_PROP_SRC_FRAME                           "OfxImageEffectPropSrcFrame"
+
 #if defined(__cplusplus)
 }
 #endif
