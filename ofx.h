@@ -157,7 +157,7 @@ typedef struct OFX_InteractSuiteV1 OFX_InteractSuiteV1;
 struct OFX_InteractSuiteV1 {
     OFX_Status (*swap_buffers)(OFX_InteractHandle interact_instance);
     OFX_Status (*redraw)(OFX_InteractHandle interact_instance);
-    OFX_Status (*get_prop_set)(OFX_InteractHandle interact_instance, OFX_PropMapHandle *prop);
+    OFX_Status (*get_prop_map)(OFX_InteractHandle interact_instance, OFX_PropMapHandle *prop);
 };
 
 typedef struct OFX_MemorySuiteV1 OFX_MemorySuiteV1;
