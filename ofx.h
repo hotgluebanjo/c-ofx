@@ -31,15 +31,15 @@ typedef struct OFX_Range_f64 { double min, max; } OFX_Range_f64;
 typedef struct OFX_Rect_i32 { int32_t x1, y1, x2, y2; } OFX_Rect_i32;
 typedef struct OFX_Rect_f64 { double x1, y1, x2, y2; } OFX_Rect_f64;
 
-typedef void *OFX_EffectHandle;
-typedef void *OFX_PropMapHandle;
-typedef void *OFX_ParamMapHandle;
-typedef void *OFX_ClipHandle;
-typedef void *OFX_ParamHandle;
-typedef void *OFX_InteractHandle;
-typedef void *OFX_DrawContextHandle;
-typedef void *OFX_MemoryHandle;
-typedef void *OFX_MutexHandle;
+typedef struct _OFX_EffectHandle      *OFX_EffectHandle;
+typedef struct _OFX_PropMapHandle     *OFX_PropMapHandle;
+typedef struct _OFX_ParamMapHandle    *OFX_ParamMapHandle;
+typedef struct _OFX_ClipHandle        *OFX_ClipHandle;
+typedef struct _OFX_ParamHandle       *OFX_ParamHandle;
+typedef struct _OFX_InteractHandle    *OFX_InteractHandle;
+typedef struct _OFX_DrawContextHandle *OFX_DrawContextHandle;
+typedef struct _OFX_MemoryHandle      *OFX_MemoryHandle;
+typedef struct _OFX_MutexHandle       *OFX_MutexHandle;
 
 typedef void (*OFX_ThreadFunctionV1)(uint32_t thread_index, uint32_t thread_max, void *custom_arg);
 
@@ -105,7 +105,7 @@ struct OFX_Plugin {
     uint32_t plugin_version_minor;
 
     void (*set_host)(OFX_Host *host);
-    OFX_Status (*main_entry)(char *action, OFX_EffectHandle handle, OFX_PropMapHandle in_args, OFX_PropMapHandle out_args);
+    OFX_Status (*main_entry)(char *action, void *handle, OFX_PropMapHandle in_args, OFX_PropMapHandle out_args);
 };
 
 typedef struct OFX_DialogSuiteV1 OFX_DialogSuiteV1;
@@ -168,14 +168,14 @@ struct OFX_MemorySuiteV1 {
 
 typedef struct OFX_MessageSuiteV1 OFX_MessageSuiteV1;
 struct OFX_MessageSuiteV1 {
-    OFX_Status (*message)(OFX_EffectHandle handle, char *message_type, char *message_id, char *format, ...);
+    OFX_Status (*message)(void *handle, char *message_type, char *message_id, char *format, ...);
 };
 
 typedef struct OFX_MessageSuiteV2 OFX_MessageSuiteV2;
 struct OFX_MessageSuiteV2 {
-    OFX_Status (*message)(OFX_EffectHandle handle, char *message_type, char *message_id, char *format, ...);
-    OFX_Status (*set_persistent_message)(OFX_EffectHandle handle, char *message_type, char *message_id, char *format, ...);
-    OFX_Status (*clear_persistent_message)(OFX_EffectHandle handle);
+    OFX_Status (*message)(void *handle, char *message_type, char *message_id, char *format, ...);
+    OFX_Status (*set_persistent_message)(void *handle, char *message_type, char *message_id, char *format, ...);
+    OFX_Status (*clear_persistent_message)(void *handle);
 };
 
 typedef struct OFX_MultithreadSuiteV1 OFX_MultithreadSuiteV1;
@@ -241,16 +241,16 @@ struct OFX_ParametricParameterSuiteV1 {
 
 typedef struct OFX_ProgressSuiteV1 OFX_ProgressSuiteV1;
 struct OFX_ProgressSuiteV1 {
-    OFX_Status (*start)(OFX_EffectHandle instance, char *label);
-    OFX_Status (*update)(OFX_EffectHandle instance, double progress);
-    OFX_Status (*end)(OFX_EffectHandle instance);
+    OFX_Status (*start)(void *instance, char *label);
+    OFX_Status (*update)(void *instance, double progress);
+    OFX_Status (*end)(void *instance);
 };
 
 typedef struct OFX_ProgressSuiteV2 OFX_ProgressSuiteV2;
 struct OFX_ProgressSuiteV2 {
-    OFX_Status (*start)(OFX_EffectHandle instance, char *message, char *messageid);
-    OFX_Status (*update)(OFX_EffectHandle instance, double progress);
-    OFX_Status (*end)(OFX_EffectHandle instance);
+    OFX_Status (*start)(void *instance, char *message, char *messageid);
+    OFX_Status (*update)(void *instance, double progress);
+    OFX_Status (*end)(void *instance);
 };
 
 typedef struct OFX_PropertySuiteV1 OFX_PropertySuiteV1;
@@ -281,9 +281,9 @@ struct OFX_PropertySuiteV1 {
 
 typedef struct OFX_TimelineSuiteV1 OFX_TimelineSuiteV1;
 struct OFX_TimelineSuiteV1 {
-    OFX_Status (*get_time)(OFX_EffectHandle instance, OFX_Time *time);
-    OFX_Status (*go_to_time)(OFX_EffectHandle instance, OFX_Time time);
-    OFX_Status (*get_time_bounds)(OFX_EffectHandle instance, OFX_Time *first_time, OFX_Time *last_time);
+    OFX_Status (*get_time)(void *instance, OFX_Time *time);
+    OFX_Status (*go_to_time)(void *instance, OFX_Time time);
+    OFX_Status (*get_time_bounds)(void *instance, OFX_Time *first_time, OFX_Time *last_time);
 };
 
 #if defined(__cplusplus)

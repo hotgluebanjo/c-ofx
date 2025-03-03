@@ -153,10 +153,12 @@ OFX_Status render(OFX_EffectHandle instance, OFX_PropMapHandle in_args) {
 
 OFX_Status plugin_main(
     char *action,
-    OFX_EffectHandle handle,
+    void *raw_handle,
     OFX_PropMapHandle in_args,
     OFX_PropMapHandle out_args
 ) {
+    OFX_EffectHandle handle = (OFX_EffectHandle)raw_handle;
+
     if (cstr_eq(action, OFX_ACTION_LOAD)) {
         return load();
     }
