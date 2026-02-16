@@ -111,7 +111,7 @@ struct OFX_Plugin {
 typedef struct OFX_DialogSuiteV1 OFX_DialogSuiteV1;
 struct OFX_DialogSuiteV1 {
     OFX_Status (*request_dialog)(void *user_data);
-    OFX_Status (*notify_redraw_rending)();
+    OFX_Status (*notify_redraw_pending)();
 };
 
 typedef struct OFX_DrawSuiteV1 OFX_DrawSuiteV1;
