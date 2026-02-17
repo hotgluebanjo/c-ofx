@@ -186,7 +186,7 @@ struct OFX_MultithreadSuiteV1 {
     OFX_Status (*multithread_index)(uint32_t *thread_index);
     int32_t (*multithread_is_spawned_thread)();
 
-    OFX_Status (*mutex_create)(OFX_MutexHandle mutex, int32_t lock_count);
+    OFX_Status (*mutex_create)(OFX_MutexHandle *mutex, int32_t lock_count);
     OFX_Status (*mutex_destroy)(OFX_MutexHandle mutex);
     OFX_Status (*mutex_lock)(OFX_MutexHandle mutex);
     OFX_Status (*mutex_unlock)(OFX_MutexHandle mutex);
